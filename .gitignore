@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+.venv/
+*.egg-info/
+
+# Keys & secrets — NEVER commit these
+signature/keys/
+*.pem
+*.key
+
+# Large / generated data
+results/raw/*.csv
+results/raw/*.json
+ai_agent/model_store/*.pkl
+datasets/sample_files/*
+!datasets/sample_files/.gitkeep
+
+# OS / editor
+.DS_Store
+.vscode/
+*.swp
+
+# Logs
+*.log
