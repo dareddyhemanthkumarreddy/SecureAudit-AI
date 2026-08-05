@@ -28,5 +28,17 @@
 
 
 
+\### 2026-08-05 (Phase 2 complete)
+
+\- Built ChallengeGenerator (auditor/challenge.py) - TPA randomly selects 10% of signed subsets to challenge, reproducible via seed.
+
+\- Built VerificationEngine (auditor/verification\_engine.py) - TPA verifies challenged subsets using ONLY the public key, no private key or trusted raw data needed.
+
+\- Tested: 77/77 subsets pass when untampered. After deliberately tampering 1 subset, exactly 1 fails - precise detection confirmed, no false positives/negatives.
+
+\- Wired full pipeline into main.py: partition -> sign -> upload -> challenge -> verify, all running end-to-end successfully.
+
+\- Phase 2 complete. This is a real, working cryptographic integrity layer - a genuine improvement over the professor's original project, which had no signatures at all (signature field was always None).
+
 
 

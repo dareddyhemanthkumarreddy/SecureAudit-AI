@@ -4,5 +4,5 @@
 
 
 
-\- Phase 2 (partial): RSA key management + subset-based signature generation and verification
+\- Phase 2 complete: RSA subset signing, TPA challenge generation, and signature verification - wired end-to-end into main.py
 
