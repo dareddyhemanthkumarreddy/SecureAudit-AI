@@ -26,3 +26,6 @@ datasets/sample_files/*
 
 # Logs
 *.log
+
+# Generated cloud storage files
+storage/cloud/*.json
