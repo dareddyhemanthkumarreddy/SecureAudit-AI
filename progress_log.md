@@ -42,3 +42,21 @@
 
 
 
+
+
+\### 2026-08-05 (Phase 3 - simulators)
+
+\- Built ModificationSimulator (simulation/modification\_simulator.py) - simulates legitimate, properly-tracked edits at configurable rate. Tested at 5%: 619/12384 sub-blocks modified correctly.
+
+\- Built CorruptionSimulator (simulation/corruption\_simulator.py) - simulates silent corruption (data changes, no metadata trace). Tested at 2%: confirmed corrupted sub-blocks show completely normal metadata (version=1, modified=False, trust=100) - proves old-style metadata-only risk detection would miss this entirely.
+
+\- Built AttackSimulator (simulation/attack\_simulator.py) - simulates adversary deliberately targeting the safest-looking (highest trust+stability) sub-blocks, to test if risk scoring can be gamed. Tested at 2% rate.
+
+\- Key finding: signature verification (Phase 2) catches corruption/attacks that metadata-based risk scoring alone would miss - motivates combining both layers in final system.
+
+\- All three simulators use MetadataTracker.apply\_modification() with track\_properly flag to control whether tracking happens - clean, reusable design.
+
+
+
+
+
