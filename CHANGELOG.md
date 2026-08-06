@@ -12,3 +12,9 @@
 
 \- Phase 3 (simulators): modification, corruption, and adversarial attack simulators for generating realistic test/training data
 
+
+
+
+
+\- Phase 4 complete: feature extraction pipeline producing labeled ML training data from simulated tampering
+

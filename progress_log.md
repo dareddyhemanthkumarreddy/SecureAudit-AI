@@ -58,5 +58,19 @@
 
 
 
+\### 2026-08-05 (Phase 4 - feature extraction)
+
+\- Installed pandas, numpy for structured data handling.
+
+\- Built FeatureExtractor (features/feature\_extractor.py) - converts partitioned+simulated data into a clean (features -> true\_label) pandas DataFrame.
+
+\- Features used: trust\_score, stability\_index, version, modified, challenge\_count, verification\_count.
+
+\- Ran all 3 simulators together (5% modification, 2% corruption, 2% attack) on sample.pdf, extracted 12384 labeled rows: 1097 tampered (8.9%), 11287 untouched.
+
+\- Saved dataset to results/raw/sample\_features.csv - this is our first real ML training dataset, ready for Phase 5.
+
+\- Noted: verification\_count is currently always 0 in isolated tests since no TPA challenge ran in this test - will become meaningful once combined with Phase 2 in the full pipeline.
+
 
 
