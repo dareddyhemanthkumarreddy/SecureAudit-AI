@@ -220,3 +220,17 @@
 
 \- Saved raw sweep data (results/raw/full\_pipeline\_sweep.csv) and averaged summary (results/processed/full\_pipeline\_summary.csv) - ready for Phase 12 graphs.
 
+
+
+\### Phase 12 - Graphs complete (ALL 12 PHASES DONE)
+
+\- Installed matplotlib.
+
+\- Built graph\_generator.py - produces 5 key figures from already-collected experiment data: recall vs mod rate, efficiency vs mod rate, baseline comparison bar chart, anomaly scores scatter plot, garlic privacy vs decoy ratio.
+
+\- Reviewed all 5 figures: anomaly score separation is very clean (strongest figure). Metadata-Only and Rule-Based AMTRS lines perfectly overlap in both line charts (expected - confirmed identical values earlier in Phase 10/11) - needs a caption note in the paper. Garlic privacy values are all negligibly small (0.0003-0.0042) with a non-monotonic wiggle at high decoy counts - this is statistical noise around zero, not a real trend - needs explicit framing in the paper to avoid misreading.
+
+\- Copied final figures to paper/figures/.
+
+\- ALL 12 PHASES OF THE PROJECT PLAN NOW COMPLETE. Next: write up the paper itself, and prepare for team/professor review.
+
