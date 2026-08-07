@@ -110,3 +110,17 @@
 
 \- Decision: keep Module 1 scoped to what it's honestly good at (tracked modifications, 100% recall), rely on Phase 2 signatures for untracked corruption/attacks. Revisit combining signature-verification results as a feature later if time allows.
 
+
+
+\### Phase 5 - Threshold sweep finding
+
+\- Ran threshold sweep (0.50-0.95): results completely flat across all thresholds.
+
+\- Diagnosed: model outputs only 2 distinct probability values across 123,840 rows - 1.00 for modification (9654 rows), and an identical 0.2461 for corruption, attack, AND untouched rows combined (114,186 rows) - all indistinguishable to the model.
+
+\- Root cause: corruption/attack/untouched share identical metadata (confirmed in earlier finding), so current Module 1 is functionally a binary classifier (modified flag), not yet a genuinely graded risk score.
+
+\- Conclusion: threshold tuning is not meaningful until Module 1 has a feature that varies for corruption/attack/untouched cases specifically. Confirms need to integrate signature-verification result as a feature (deferred earlier) - this is the natural next improvement, not optional polish.
+
+\- Current honest scope of Module 1: perfect binary detector for tracked modifications only. Documented as-is for now; will revisit with signature-derived features in a later phase.
+
