@@ -54,3 +54,9 @@
 
 \- Phase 8 complete: garlic bundling (Module 4) with statistically validated privacy guarantee (adversary advantage \~0)
 
+
+
+\### Added
+
+\- Phase 9 complete: exact machine unlearning via retraining, tested by forgetting a specific user's data from Module 3's model
+

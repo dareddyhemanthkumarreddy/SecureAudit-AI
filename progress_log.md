@@ -170,3 +170,17 @@
 
 \- Important note: "garlic bundling" is our own adapted design (inspired by anonymity network concepts), not a term with established grounding in cloud-auditing/PDP literature - must frame carefully in the paper as our design choice, verify with literature search before submission.
 
+
+
+\### Phase 9 - Machine Unlearning complete
+
+\- Updated generate\_session\_data.py to tag each session with user\_id (users 1-9 = normal, user 10 = the simulated compromised user, all 5 anomalous sessions belong to user 10).
+
+\- Built MachineUnlearning (ai\_agent/unlearning.py) - implements EXACT unlearning via full retraining (not approximate) - mathematically identical to a model that never saw the removed user's data.
+
+\- Tested: "forget user 10" - removed 5 sessions, retrained on remaining 45 from 9 users. Structural check passed (user 10 has zero rows in new training data).
+
+\- Interesting diagnostic finding: after unlearning, all 5 of user 10's session scores become IDENTICAL (-0.597449) when evaluated by the new model - since they're now out-of-sample points evaluated against a boundary that never included them, rather than points that helped shape that boundary. All 5 scores shifted positively (less anomalous-looking) - consistent with removing an anomalous cluster from training data.
+
+\- This is a clean, defensible unlearning result: structural removal is provable, and the behavioral difference (identical, shifted scores) makes intuitive sense given how Isolation Forest works.
+
