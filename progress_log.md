@@ -184,3 +184,19 @@
 
 \- This is a clean, defensible unlearning result: structural removal is provable, and the behavioral difference (identical, shifted scores) makes intuitive sense given how Isolation Forest works.
 
+
+
+\### Phase 10 - Baselines complete, key comparison result
+
+\- Built 4 baseline strategies at subset-level: VerifyAll, RandomVerification (10%), MetadataVerification, RuleBasedAMTRS (professor's original rule logic, reimplemented).
+
+\- Built baseline\_comparison.py - runs all baselines + our AI (Module 1) against realistic mixed tampering (5% mod, 2% corruption, 2% attack) on sample.pdf, 774 subsets, 525 truly tampered.
+
+\- RESULTS: Verify-All 100% recall/0% efficiency. Random 14.7% recall/90% efficiency (confirms random sampling is a genuinely weak baseline). Metadata-Only, Rule-Based AMTRS, and Our AI (Module 1) are ALL IDENTICAL: 80.8% recall, 45.2% efficiency.
+
+\- This confirms (again, now at subset level) that ALL metadata-driven approaches - baseline or AI-powered - hit the same structural ceiling, since corruption/attack tampering leaves no metadata trace for any of them to detect.
+
+\- Strengthens paper's core argument: no single layer (metadata-based selection OR signatures alone) is sufficient. The combination (efficient AI-driven screening + cryptographic signature verification for what screening misses) is the actual contribution, not either piece alone.
+
+\- Saved comparison table to results/processed/baseline\_comparison.csv - ready for paper's main results table.
+

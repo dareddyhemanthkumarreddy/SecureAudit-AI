@@ -60,3 +60,9 @@
 
 \- Phase 9 complete: exact machine unlearning via retraining, tested by forgetting a specific user's data from Module 3's model
 
+
+
+\### Added
+
+\- Phase 10 complete: 4 baseline strategies + comparison script - confirms all metadata-based methods (baselines and our AI) share the same detection ceiling, validating the two-layer defense argument
+

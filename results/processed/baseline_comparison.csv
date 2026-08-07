@@ -1,0 +1,6 @@
+strategy,subsets_selected,subsets_skipped,efficiency_pct,recall,tampered_caught,tampered_missed
+Verify-All,774,0,0.0,1.0,525,0
+Random (10%),77,697,90.05,0.1467,77,448
+Metadata-Only,424,350,45.22,0.8076,424,101
+Rule-Based AMTRS,424,350,45.22,0.8076,424,101
+Our AI (Module 1),424,350,45.22,0.8076,424,101
