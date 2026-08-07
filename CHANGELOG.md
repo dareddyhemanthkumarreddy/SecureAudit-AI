@@ -28,3 +28,9 @@
 
 \- Discovered and documented: AI risk scorer only detects tracked modifications (100%), completely misses untracked corruption/attacks (0%) - validates two-layer (AI + signature) defense design
 
+
+
+\### Changed
+
+\- Risk scorer: removed dead feature, added cross-validation for robustness
+

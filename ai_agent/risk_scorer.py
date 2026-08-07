@@ -4,6 +4,12 @@ Trains Random Forest and Gradient Boosting classifiers to
 output a continuous risk score (0.0-1.0) per sub-block, based
 on its metadata features. Replaces the old rule-based HIGH/
 MEDIUM/LOW system with a learned, threshold-tunable score.
+
+NOTE: verification_count was removed from features - it was
+always 0 in our current training data (no TPA challenge runs
+during simulation), so it added no signal and only wasted
+model capacity. Re-add once Phase 2 challenge data is wired
+into the training generator.
 """
 
 import os
@@ -11,7 +17,7 @@ import sys
 import joblib
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -19,7 +25,7 @@ import config
 
 FEATURE_COLUMNS = [
     "trust_score", "stability_index", "version",
-    "modified", "challenge_count", "verification_count",
+    "modified", "challenge_count",
 ]
 
 
@@ -33,21 +39,24 @@ class RiskScorer:
     def _build_model(self):
         if self.model_type == "random_forest":
             return RandomForestClassifier(
-                n_estimators=100,
-                max_depth=8,
+                n_estimators=150,
+                max_depth=10,
+                min_samples_leaf=5,
                 random_state=config.RANDOM_SEED,
                 class_weight="balanced",
+                n_jobs=-1,
             )
         elif self.model_type == "gradient_boosting":
             return GradientBoostingClassifier(
-                n_estimators=100,
-                max_depth=4,
+                n_estimators=150,
+                max_depth=3,
+                learning_rate=0.1,
                 random_state=config.RANDOM_SEED,
             )
         else:
             raise ValueError(f"Unknown model_type: {self.model_type}")
 
-    def train(self, df):
+    def train(self, df, run_cross_validation=True):
         """
         Trains the model on a labeled DataFrame (must have FEATURE_COLUMNS
         and a 'true_label' column). Splits into train/test, reports metrics.
@@ -75,6 +84,15 @@ class RiskScorer:
             "f1": round(f1_score(y_test, preds, zero_division=0), 4),
             "threshold_used": config.RISK_THRESHOLD,
         }
+
+        if run_cross_validation:
+            # 5-fold CV on AUC - more robust than a single train/test split,
+            # tells us how much the score varies across different data slices.
+            cv_scores = cross_val_score(
+                self._build_model(), X, y, cv=5, scoring="roc_auc", n_jobs=-1
+            )
+            metrics["cv_auc_mean"] = round(cv_scores.mean(), 4)
+            metrics["cv_auc_std"] = round(cv_scores.std(), 4)
 
         # Build a results DataFrame for further analysis (e.g. per tamper_type)
         test_results = df.loc[idx_test].copy()
@@ -132,6 +150,7 @@ if __name__ == "__main__":
     else:
         df = pd.read_csv(dataset_path)
         print(f"Loaded dataset: {len(df)} rows, {df['true_label'].sum()} tampered")
+        print(f"Features used: {FEATURE_COLUMNS}")
 
         print("\n--- Training Random Forest ---")
         rf_scorer = RiskScorer(model_type="random_forest")
@@ -147,10 +166,10 @@ if __name__ == "__main__":
         gb_path = gb_scorer.save()
         print(f"Saved: {gb_path}")
 
-        print("\n--- Comparison ---")
-        print(f"{'Metric':<12} {'Random Forest':<15} {'Gradient Boosting':<15}")
-        for key in ["auc", "precision", "recall", "f1"]:
-            print(f"{key:<12} {rf_metrics[key]:<15} {gb_metrics[key]:<15}")
+        print("\n--- Comparison (single split + 5-fold CV) ---")
+        print(f"{'Metric':<15} {'Random Forest':<15} {'Gradient Boosting':<15}")
+        for key in ["auc", "precision", "recall", "f1", "cv_auc_mean", "cv_auc_std"]:
+            print(f"{key:<15} {rf_metrics[key]:<15} {gb_metrics[key]:<15}")
 
         print("\n--- Random Forest Feature Importance ---")
         for feature, importance in zip(FEATURE_COLUMNS, rf_scorer.model.feature_importances_):

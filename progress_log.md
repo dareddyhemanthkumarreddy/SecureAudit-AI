@@ -96,3 +96,17 @@
 
 \- verification\_count feature importance = 0.0000 - makes sense, no TPA challenge occurred in these isolated training runs. Will investigate combining with Phase 2 challenge data in a later experiment.
 
+
+
+\### Phase 5 - Model refinement
+
+\- Removed verification\_count feature (always 0 in current data, no signal, wasted capacity).
+
+\- Tuned RF/GB hyperparameters, added 5-fold cross-validation for robustness check.
+
+\- CV confirms model is stable: cv\_auc\_mean=0.8378, cv\_auc\_std=0.0239, closely matches single-split auc=0.8415.
+
+\- RF and GB still produce identical results - confirmed this is because "modified" flag alone nearly perfectly separates the classes (only modification-type tampering sets it True). Not a bug - reflects genuine structure of current feature set.
+
+\- Decision: keep Module 1 scoped to what it's honestly good at (tracked modifications, 100% recall), rely on Phase 2 signatures for untracked corruption/attacks. Revisit combining signature-verification results as a feature later if time allows.
+
