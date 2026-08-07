@@ -1,0 +1,21 @@
+strategy,mod_rate,avg_efficiency_pct,avg_recall
+Metadata-Only,0.01,85.296,0.3689
+Metadata-Only,0.05,44.342,0.811
+Metadata-Only,0.1,18.164,0.9432
+Metadata-Only,0.2,2.48,0.9926
+Our Full System (AI + Safety Net),0.01,76.818,0.4396
+Our Full System (AI + Safety Net),0.05,39.948,0.8309
+Our Full System (AI + Safety Net),0.1,16.406,0.9473
+Our Full System (AI + Safety Net),0.2,2.274,0.9931
+Random (10%),0.01,90.05,0.2497
+Random (10%),0.05,90.05,0.145
+Random (10%),0.1,90.05,0.1146
+Random (10%),0.2,90.05,0.1013
+Rule-Based AMTRS,0.01,85.296,0.3689
+Rule-Based AMTRS,0.05,44.342,0.811
+Rule-Based AMTRS,0.1,18.164,0.9432
+Rule-Based AMTRS,0.2,2.48,0.9926
+Verify-All,0.01,0.0,1.0
+Verify-All,0.05,0.0,1.0
+Verify-All,0.1,0.0,1.0
+Verify-All,0.2,0.0,1.0

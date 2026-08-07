@@ -200,3 +200,23 @@
 
 \- Saved comparison table to results/processed/baseline\_comparison.csv - ready for paper's main results table.
 
+
+
+
+
+\### Phase 11 - Full Pipeline Sweep complete (capstone experiment)
+
+\- Corrected earlier flawed idea: feeding signature verification results INTO Module 1 as a feature is circular (can't use the answer to decide whether to check). Real fix: layer a random "safety net" (10% of Module-1-LOW subsets) that still gets real cryptographic verification, catching corruption/attack tampering Module 1 structurally misses.
+
+\- Built full\_pipeline\_sweep.py - runs Verify-All, Random, Metadata-Only, Rule-Based AMTRS, and Our Full System (AI + safety net) across 4 modification rates (1%, 5%, 10%, 20%) x 5 runs each = 20 full pipeline rounds, using REAL signature verification (not ground-truth cheating) to measure recall.
+
+\- KEY FINDING: Our Full System shows a real, consistent recall improvement over Metadata-Only/Rule-Based AMTRS at every rate, but the improvement SHRINKS as modification rate increases: +7 points at 1% rate (36.9% -> 44.0%), down to negligible at 20% rate (99.3% -> 99.3%).
+
+\- Explanation: at low modification rates, most true tampering is corruption/attack-type (invisible to metadata) - safety net has real work to do. At high rates, legitimate modifications dominate and metadata-only methods already perform well, so safety net adds less value.
+
+\- Genuine trade-off identified: safety net costs efficiency too (e.g. at 1% rate: 76.8% vs 85.3% work saved) for its recall gain - not a free win, a real trade-off to present honestly.
+
+\- This becomes a strong, nuanced paper narrative: our hybrid approach helps most exactly where metadata-only methods are weakest, rather than claiming uniform superiority everywhere.
+
+\- Saved raw sweep data (results/raw/full\_pipeline\_sweep.csv) and averaged summary (results/processed/full\_pipeline\_summary.csv) - ready for Phase 12 graphs.
+

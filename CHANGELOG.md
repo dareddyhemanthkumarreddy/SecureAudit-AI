@@ -66,3 +66,13 @@
 
 \- Phase 10 complete: 4 baseline strategies + comparison script - confirms all metadata-based methods (baselines and our AI) share the same detection ceiling, validating the two-layer defense argument
 
+
+
+\### Added
+
+\- Phase 11 complete: full pipeline sweep across modification rates - our hybrid AI+safety-net system shows consistent but rate-dependent recall improvement over baselines
+
+\### Fixed
+
+\- Corrected flawed "signature-as-feature" idea from earlier session - replaced with honest safety-net verification layer
+

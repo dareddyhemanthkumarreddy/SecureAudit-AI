@@ -47,3 +47,6 @@ SCHEDULER_MIN_INTERVAL_HOURS = 1
 SCHEDULER_MAX_INTERVAL_HOURS = 72
 SCHEDULER_RISK_WEIGHT = 3.0
 SCHEDULER_ANOMALY_WEIGHT = 5.0
+
+# Full pipeline: safety-net verification (catches what Module 1 misses)
+SAFETY_NET_PERCENTAGE = 10   # % of Module-1-LOW subsets still randomly verified
