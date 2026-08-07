@@ -74,3 +74,25 @@
 
 
 
+
+
+\###2026-08-07( Phase 5 - Risk Scorer, key finding)
+
+\- Installed scikit-learn.
+
+\- Built generate\_training\_data.py - runs 10 simulation rounds at varying rates, tags each row with tamper\_type (modification/corruption/attack/none). Generated 123,840 labeled rows: 9654 modification, 2536 corruption, 2098 attack, 109552 untouched.
+
+\- Built RiskScorer (ai\_agent/risk\_scorer.py) - trains Random Forest and Gradient Boosting on trust\_score, stability\_index, version, modified, challenge\_count, verification\_count.
+
+\- Overall metrics: AUC 0.8415, precision 1.0, recall 0.683 (both models identical).
+
+\- IMPORTANT FINDING: broke down recall by tamper\_type - modification 100% detected, corruption 0% detected, attack 0% detected.
+
+\- Root cause: corruption/attack simulators use track\_properly=False, so tampered sub-blocks have IDENTICAL metadata to untouched ones - no signal exists for ML to learn from.
+
+\- This is NOT a bug - it's proof that metadata-based AI risk scoring structurally cannot catch untracked tampering, which is exactly why the system needs the cryptographic subset-signature layer (Phase 2) as a second, independent detection mechanism.
+
+\- This becomes a core two-layer-defense argument for the paper: AI handles efficient detection of expected/tracked changes, signatures catch untracked/adversarial changes that AI cannot see by design.
+
+\- verification\_count feature importance = 0.0000 - makes sense, no TPA challenge occurred in these isolated training runs. Will investigate combining with Phase 2 challenge data in a later experiment.
+

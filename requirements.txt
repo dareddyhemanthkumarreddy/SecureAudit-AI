@@ -1,3 +1,6 @@
 cryptography
 pandas
 numpy
+scikit-learn
+joblib
+

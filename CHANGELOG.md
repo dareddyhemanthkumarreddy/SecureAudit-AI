@@ -18,3 +18,13 @@
 
 \- Phase 4 complete: feature extraction pipeline producing labeled ML training data from simulated tampering
 
+
+
+
+
+\- Phase 5 (partial): RiskScorer with RF/GB models, threshold-based scoring
+
+\### Findings
+
+\- Discovered and documented: AI risk scorer only detects tracked modifications (100%), completely misses untracked corruption/attacks (0%) - validates two-layer (AI + signature) defense design
+
