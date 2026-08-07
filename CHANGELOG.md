@@ -42,3 +42,9 @@
 
 \- Phase 6 complete: Isolation Forest anomaly detector (Module 3) - 5/5 detection on test sessions
 
+
+
+\### Added
+
+\- Phase 7 complete: adaptive audit scheduler (Module 2) - anomalous sessions audited \~7x more frequently than normal
+

@@ -138,3 +138,21 @@
 
 \- Caveat to remember: only 50 sessions total, all from the same sample.pdf file with synthetically controlled rate ranges - real validation would need more files, more realistic anomaly scenarios, and testing at the boundary between normal/anomalous rates (not just clearly separated ranges).
 
+
+
+\### Phase 7 - Audit Scheduler (Module 2) complete
+
+\- Added scheduler config settings: base interval 24hrs, min 1hr, max 72hrs, risk\_weight=3.0, anomaly\_weight=5.0.
+
+\- Built AuditScheduler (ai\_agent/audit\_scheduler.py) - computes adaptive next-audit interval using formula: interval = base / (1 + risk\*risk\_weight + anomaly\_penalty), bounded to \[min, max].
+
+\- Tested using Module 3's actual anomaly predictions + fraction\_modified as risk proxy, across all 50 sessions.
+
+\- Result: normal sessions average \~21 hours between audits, anomalous sessions drop to \~3.4 hours (\~7x more frequent) vs fixed 24-hour baseline.
+
+\- This demonstrates the three modules working together as an integrated system: Module 1/aggregate risk + Module 3 anomaly flag -> Module 2 scheduling decision. Good evidence for paper's "unified AI agent" narrative.
+
+\- Module 2 currently uses a simple adaptive formula, not full reinforcement learning (deferred as originally planned - can revisit as a stretch goal later).
+
+
+
