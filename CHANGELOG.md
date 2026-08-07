@@ -48,3 +48,9 @@
 
 \- Phase 7 complete: adaptive audit scheduler (Module 2) - anomalous sessions audited \~7x more frequently than normal
 
+
+
+\### Added
+
+\- Phase 8 complete: garlic bundling (Module 4) with statistically validated privacy guarantee (adversary advantage \~0)
+

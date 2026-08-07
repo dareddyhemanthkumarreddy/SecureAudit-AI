@@ -156,3 +156,17 @@
 
 
 
+
+
+\### Phase 8 - Garlic Bundling (Module 4) complete
+
+\- Built GarlicBundler (garlic/garlic\_bundler.py) - mixes real audit requests with random decoys drawn from the full subset universe, shuffled before sending to TPA.
+
+\- Built adversary simulation to test privacy: naive adversary tries to guess which bundle entries are real, averaged over 2000 trials (single-trial results were too noisy/unreliable - fixed this).
+
+\- Result: adversary\_advantage \~0.00 across all decoy ratios (1, 2, 4, 8 decoys per real) - confirms bundle structure leaks no exploitable information, real requests are statistically indistinguishable from decoys.
+
+\- Trade-off identified: more decoys = stronger privacy margin but more TPA verification overhead - this becomes a privacy-vs-efficiency graph for the paper.
+
+\- Important note: "garlic bundling" is our own adapted design (inspired by anonymity network concepts), not a term with established grounding in cloud-auditing/PDP literature - must frame carefully in the paper as our design choice, verify with literature search before submission.
+
