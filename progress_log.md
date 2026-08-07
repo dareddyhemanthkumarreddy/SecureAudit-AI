@@ -124,3 +124,17 @@
 
 \- Current honest scope of Module 1: perfect binary detector for tracked modifications only. Documented as-is for now; will revisit with signature-derived features in a later phase.
 
+
+
+\### Phase 6 - Anomaly Detector (Module 3) complete
+
+\- Built generate\_session\_data.py - simulates 50 audit sessions (45 normal, 5 deliberately anomalous with high tampering rates 25-45% vs normal 1-8%), extracts 5 observable aggregate features per session (avg\_trust\_score, avg\_stability\_index, fraction\_modified, avg\_challenge\_count, pct\_low\_trust).
+
+\- Built AnomalyDetector (ai\_agent/anomaly\_detector.py) using Isolation Forest, trained UNSUPERVISED (never sees true\_anomaly during training).
+
+\- Result: 5/5 anomalous sessions correctly detected, 0 false positives, 0 false negatives. Clean score separation between normal and anomalous clusters.
+
+\- This is a genuinely strong result - Module 3 successfully catches cross-session behavioral anomalies that Module 1 (per-block) isn't designed to see, validating the multi-module AI agent architecture.
+
+\- Caveat to remember: only 50 sessions total, all from the same sample.pdf file with synthetically controlled rate ranges - real validation would need more files, more realistic anomaly scenarios, and testing at the boundary between normal/anomalous rates (not just clearly separated ranges).
+

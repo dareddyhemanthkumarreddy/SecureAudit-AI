@@ -1,26 +1,28 @@
-
+\### added
 
 \- Phase 1 complete: partitioning + cloud storage simulation, wired into main.py
 
 
 
+\### added
+
 \- Phase 2 complete: RSA subset signing, TPA challenge generation, and signature verification - wired end-to-end into main.py
 
 
 
-
+\### added
 
 \- Phase 3 (simulators): modification, corruption, and adversarial attack simulators for generating realistic test/training data
 
 
 
-
+\### added
 
 \- Phase 4 complete: feature extraction pipeline producing labeled ML training data from simulated tampering
 
 
 
-
+\### added
 
 \- Phase 5 (partial): RiskScorer with RF/GB models, threshold-based scoring
 
@@ -33,4 +35,10 @@
 \### Changed
 
 \- Risk scorer: removed dead feature, added cross-validation for robustness
+
+
+
+\### added
+
+\- Phase 6 complete: Isolation Forest anomaly detector (Module 3) - 5/5 detection on test sessions
 
