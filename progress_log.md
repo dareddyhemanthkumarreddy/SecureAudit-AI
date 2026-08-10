@@ -234,3 +234,15 @@
 
 \- ALL 12 PHASES OF THE PROJECT PLAN NOW COMPLETE. Next: write up the paper itself, and prepare for team/professor review.
 
+
+
+\### main.py rewritten - full pipeline integration + new finding
+
+\- Rewrote main.py to run the complete integrated pipeline: partition -> sign -> metadata init -> upload -> simulate tampering -> Module 1 (AI + safety net) -> Module 2 (scheduler) -> Module 4 (garlic bundle) -> TPA verify -> report. Explicitly notes Module 3 and Phase 9 (unlearning) require multi-session data and are exercised via separate experiment scripts, not a single main.py run.
+
+\- Test run result: AI flagged 424 subsets, safety net added 35 (459 total selected). Garlic bundler tried to add 4 decoys per real request (1836 requested) but was capped at only 315 available non-selected subsets - bundle ended up covering all 774 subsets (459 + 315 = 774).
+
+\- FINDING: when Module 1's selection rate is already high (59% in this run, due to 5%+2%+2% combined tampering), the decoy mechanism can saturate the bundle up to the FULL file size, eliminating the efficiency benefit in that scenario (recall was 100% since everything got verified, but 0% work was actually saved).
+
+\- This is a genuine design consideration for future refinement: decoy ratio may need to scale down (or use a different capping strategy) when the real-request count is already large, rather than a fixed multiplier regardless of selection size. Noted as a limitation/future work item.
+

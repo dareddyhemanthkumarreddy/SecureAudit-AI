@@ -82,3 +82,13 @@
 
 \- Phase 12 complete: all 5 key paper figures generated - PROJECT PLAN FULLY COMPLETE (Phases 1-12)
 
+
+
+\### Changed
+
+\- Rewrote main.py to integrate all applicable phases into one end-to-end pipeline run
+
+\### Findings
+
+\- Discovered: garlic bundle can saturate to full file size when AI selection rate is already high, eliminating efficiency benefit in that scenario - noted for future refinement
+
