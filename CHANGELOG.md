@@ -104,3 +104,9 @@
 
 \- Module 3 (Anomaly Detector) now properly wired into main.py - scores real session data against pre-trained model instead of hardcoded placeholder
 
+
+
+\### Added
+
+\- Multi-file generalization validation - confirmed zero false positives and consistent recall/efficiency across 4 file types (JPG, M4A, PDF, MP4), 160KB-16.9MB size range
+

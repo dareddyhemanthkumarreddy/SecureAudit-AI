@@ -282,3 +282,17 @@
 
 \- Decision: frame in the paper as an explicit adaptation of the general garlic routing concept to a new problem domain, properly cited to Freedman/I2P, with our contribution being the application to selection-privacy in cloud auditing specifically - not claimed as prior art from the PDP field.
 
+
+
+\### Multi-file generalization testing complete
+
+\- Built multi\_file\_validation.py - tests clean baseline (0% tampering, false-positive check) + modification rate sweep (5/10/15/20%) across 4 different file types: wallpaper.jpg (160KB), music.m4a (4.8MB), sample.pdf (6.3MB), video.mp4 (16.9MB).
+
+\- CLEAN BASELINE: 0 false positives across all 4 files at every scale (2 to 206 subsets challenged) - confirms no false-alarm problem regardless of file type/size.
+
+\- TAMPERING SWEEP: recall and efficiency patterns are remarkably consistent across music/PDF/video at every rate (e.g. at 5% mod rate: recall 0.827-0.857, efficiency 39-42% across all three) - strong evidence Module 1's features generalize across file content types, since they're based on sub-block behavior (trust, stability, version) not file semantics.
+
+\- wallpaper.jpg (only 20 total subsets) is an explainable small-file edge case: at 15-20% mod rate, nearly the entire file gets tampered (19/20 subsets), so efficiency correctly drops toward 0% - not a flaw, just what happens when tampering saturates a very small file.
+
+\- This closes the "only tested on one file" limitation - system now validated across 4 distinct file types spanning a 100x size range (160KB to 16.9MB).
+
