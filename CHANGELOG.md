@@ -92,3 +92,9 @@
 
 \- Discovered: garlic bundle can saturate to full file size when AI selection rate is already high, eliminating efficiency benefit in that scenario - noted for future refinement
 
+
+
+\### Fixed
+
+\- Garlic bundle saturation bug - added MAX\_BUNDLE\_PCT cap, confirmed fix in isolated tests and full main.py pipeline run
+

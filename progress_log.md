@@ -246,3 +246,13 @@
 
 \- This is a genuine design consideration for future refinement: decoy ratio may need to scale down (or use a different capping strategy) when the real-request count is already large, rather than a fixed multiplier regardless of selection size. Noted as a limitation/future work item.
 
+
+
+\### Fixed - Garlic Bundle Saturation Bug
+
+\- Root cause: decoys\_per\_real x real\_count had no upper bound, causing bundle to balloon to 100% of file when Module 1's selection rate was high (see main.py integration finding).
+
+\- Fix: added MAX\_BUNDLE\_PCT cap (default 60%) - bundle now scales decoy count down to respect this cap rather than growing unbounded. Confirmed old privacy validation still holds (advantage \~0 unchanged) and new saturation test explicitly reproduces + fixes the exact main.py scenario (424 real requests): capped run stays at 464/774 (60%) instead of 774/774.
+
+\- Re-ran main.py end-to-end: bundle now 464 total (459 real + 5 decoys, correctly scaled down from the requested 1696), verified 29, failed 435, \~40% work genuinely skipped. Confirms the fix holds in the full integrated pipeline, not just in isolation.
+
