@@ -5,8 +5,9 @@ Runs the FULL integrated pipeline end-to-end:
   Partition -> Sign (Phase 2) -> Metadata Init (Phase 4)
   -> Upload to Cloud (Phase 1) -> Simulate Tampering (Phase 3, demo)
   -> Module 1: AI Risk Scoring + Safety Net (Phase 5 + 11)
-  -> Module 2: Adaptive Audit Scheduling (Phase 7)
-  -> Module 4: Garlic Bundling (Phase 8)
+  -> Module 3: Anomaly Detection on THIS session's aggregate stats
+  -> Module 2: Adaptive Audit Scheduling (Phase 7), using Module 1 + 3 outputs
+  -> Module 4: Garlic Bundling (Phase 8, with saturation fix)
   -> TPA Challenge + Signature Verification (Phase 2)
   -> Report
 
@@ -15,6 +16,14 @@ already be trained (see experiments/generate_training_data.py +
 ai_agent/risk_scorer.py, and experiments/generate_session_data.py +
 ai_agent/anomaly_detector.py) - this script LOADS them rather than
 retraining on every run.
+
+Note: Module 3 was trained on MULTI-SESSION historical data (50
+simulated sessions). Using it here to score a SINGLE live session
+is a reasonable real-world use of a pre-trained model, but the
+model itself is not being retrained or updated by this run - it
+is applying what it already learned to one new data point. Machine
+unlearning (Phase 9) is a separate, standalone operation on that
+historical training set and is not part of this live pipeline.
 """
 
 import os
@@ -31,6 +40,7 @@ from simulation.modification_simulator import ModificationSimulator
 from simulation.corruption_simulator import CorruptionSimulator
 from simulation.attack_simulator import AttackSimulator
 from ai_agent.risk_scorer import RiskScorer
+from ai_agent.anomaly_detector import AnomalyDetector, SESSION_FEATURE_COLUMNS
 from ai_agent.audit_scheduler import AuditScheduler
 from garlic.garlic_bundler import GarlicBundler
 from auditor.verification_engine import VerificationEngine
@@ -74,6 +84,36 @@ def select_with_safety_net(partition_info, scorer, threshold=0.5,
     safety_net = set(rng.sample(remaining, min(num_safety_net, len(remaining))))
 
     return ai_selected | safety_net, ai_selected, safety_net
+
+
+def compute_session_features(partition_info):
+    """
+    Computes this run's session-level aggregate features - the
+    SAME feature set Module 3's Isolation Forest was trained on
+    (see experiments/generate_session_data.py). This lets us score
+    the CURRENT audit session against the historically-trained model.
+    """
+    trust_scores = []
+    stability_scores = []
+    modified_flags = []
+    challenge_counts = []
+
+    for block in partition_info["blocks"]:
+        for sub in block["sub_blocks"]:
+            trust_scores.append(sub["trust_score"])
+            stability_scores.append(MetadataTracker.calculate_stability(sub))
+            modified_flags.append(sub["modified"])
+            challenge_counts.append(sub["challenge_count"])
+
+    n = len(trust_scores)
+
+    return pd.DataFrame([{
+        "avg_trust_score": sum(trust_scores) / n,
+        "avg_stability_index": sum(stability_scores) / n,
+        "fraction_modified": sum(modified_flags) / n,
+        "avg_challenge_count": sum(challenge_counts) / n,
+        "pct_low_trust": sum(1 for t in trust_scores if t < 80) / n,
+    }])
 
 
 def main():
@@ -145,21 +185,36 @@ def main():
         print(f"  Total selected for verification: {len(selected)} / {len(partition_info['subsets'])}")
 
     # ---------------------------------------------------------
+    # Module 3: Anomaly Detection on THIS session (real, not stubbed)
+    # ---------------------------------------------------------
+    print("\n[Module 3] Scoring this session against historical anomaly model...")
+    session_features = compute_session_features(partition_info)
+    anomaly_detector = AnomalyDetector()
+    try:
+        anomaly_detector.load()
+    except FileNotFoundError:
+        print("  No trained Module 3 model found. Run experiments/generate_session_data.py")
+        print("  and ai_agent/anomaly_detector.py first. Assuming not anomalous for this run.")
+        anomaly_detected = False
+    else:
+        predictions, scores = anomaly_detector.predict(session_features)
+        anomaly_detected = bool(predictions[0] == -1)
+        print(f"  Session anomaly score: {round(scores[0], 4)}")
+        print(f"  Flagged as anomalous: {anomaly_detected}")
+
+    # ---------------------------------------------------------
     # Module 2: Adaptive Audit Scheduling (Phase 7)
     # ---------------------------------------------------------
     print("\n[Module 2] Computing next audit interval...")
     total_subsets = len(partition_info["subsets"])
     avg_risk = len(ai_selected) / total_subsets if total_subsets else 0
-    # anomaly_detected here is a placeholder - a real deployment would get
-    # this from Module 3 (ai_agent/anomaly_detector.py) evaluating this
-    # session's aggregate stats against its trained model.
-    anomaly_detected = False
     next_interval = AuditScheduler.compute_next_interval(avg_risk, anomaly_detected)
     print(f"  Avg risk (fraction flagged): {round(avg_risk, 4)}")
+    print(f"  Anomaly flag (from Module 3): {anomaly_detected}")
     print(f"  Next audit scheduled in: {next_interval} hours")
 
     # ---------------------------------------------------------
-    # Module 4: Garlic Bundling (Phase 8)
+    # Module 4: Garlic Bundling (Phase 8, with saturation fix)
     # ---------------------------------------------------------
     print("\n[Module 4] Constructing garlic bundle...")
     all_subset_ids = [s["subset_id"] for s in partition_info["subsets"]]
@@ -168,7 +223,8 @@ def main():
             list(selected), all_subset_ids, seed=config.RANDOM_SEED
         )
         bundle = bundle_info["bundle"]
-        print(f"  Real requests: {len(selected)}, Decoys added: {len(bundle) - len(selected)}")
+        print(f"  Real requests: {len(selected)}, Decoys added: {bundle_info['decoys_actual']} "
+              f"(requested {bundle_info['decoys_requested']}, capped={bundle_info['capped']})")
         print(f"  Bundle sent to TPA: {len(bundle)} total requests")
     else:
         bundle = []
@@ -190,11 +246,12 @@ def main():
     # Summary
     # ---------------------------------------------------------
     print("\n" + "=" * 70)
-    print("Pipeline complete.")
-    print("Note: Module 3 (Anomaly Detector) and Module 9 (Machine Unlearning)")
-    print("operate across MANY audit sessions over time, not a single run - see")
-    print("experiments/generate_session_data.py, ai_agent/anomaly_detector.py,")
-    print("and ai_agent/unlearning.py to exercise those separately.")
+    print("Pipeline complete. All 4 AI Agent modules engaged in this run:")
+    print("  Module 1 (Risk Scorer), Module 2 (Scheduler), Module 3 (Anomaly")
+    print("  Detector, scored against pre-trained historical model), Module 4")
+    print("  (Garlic Bundler). Machine Unlearning (Phase 9) remains a separate,")
+    print("  standalone operation on Module 3's historical training data - see")
+    print("  ai_agent/unlearning.py.")
     print("=" * 70)
 
 

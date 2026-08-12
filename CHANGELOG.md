@@ -98,3 +98,9 @@
 
 \- Garlic bundle saturation bug - added MAX\_BUNDLE\_PCT cap, confirmed fix in isolated tests and full main.py pipeline run
 
+
+
+\### Fixed
+
+\- Module 3 (Anomaly Detector) now properly wired into main.py - scores real session data against pre-trained model instead of hardcoded placeholder
+
