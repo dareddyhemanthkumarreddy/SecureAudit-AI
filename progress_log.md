@@ -270,5 +270,15 @@
 
 
 
+\### Literature check - garlic bundling terminology resolved
 
+\- Searched literature to verify "garlic bundling" terminology before finalizing paper framing.
+
+\- CONFIRMED: "Garlic routing" is real, established terminology (Freedman, 2000, via Dingledine's Free Haven thesis; used in I2P) - but belongs to the anonymity networking field, not cloud storage auditing/PDP.
+
+\- CONFIRMED: No evidence of this mechanism (or an equivalent) in the PDP/PoR literature. Classical privacy-preserving auditing (e.g., Wang et al., well-known in the field) protects DATA CONTENT privacy via random masking/blinding - a different technique for a different privacy property than what we built.
+
+\- KEY INSIGHT: our garlic bundling protects SELECTION privacy (which subsets are being checked) rather than data content privacy. These are genuinely distinct privacy guarantees, not competing/redundant approaches.
+
+\- Decision: frame in the paper as an explicit adaptation of the general garlic routing concept to a new problem domain, properly cited to Freedman/I2P, with our contribution being the application to selection-privacy in cloud auditing specifically - not claimed as prior art from the PDP field.
 
