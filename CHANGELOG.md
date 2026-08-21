@@ -110,3 +110,15 @@
 
 \- Multi-file generalization validation - confirmed zero false positives and consistent recall/efficiency across 4 file types (JPG, M4A, PDF, MP4), 160KB-16.9MB size range
 
+
+
+\### Added
+
+\- Multi-file validation graphs (recall/efficiency by file, trade-off scatter, false-positive table)
+
+\### Fixed
+
+\- Duplicate row in manual\_validation\_log.csv (dedup\_log.py)
+
+\- Broken false-positive bar chart (zero-height bars invisible) - replaced with table visualization
+

@@ -296,3 +296,13 @@
 
 \- This closes the "only tested on one file" limitation - system now validated across 4 distinct file types spanning a 100x size range (160KB to 16.9MB).
 
+\### Multi-file graphs generated, bugs found and fixed
+
+\- Discovered manual\_validation\_log.csv had a duplicate sample.pdf/mod\_rate=0 row (accidental double-run). Built dedup\_log.py to clean it - confirmed 21 -> 20 rows, exactly the expected duplicate removed.
+
+\- Discovered false-positive chart was broken: since all false\_positive values are 0, a standard bar chart renders as an empty plot (zero-height bars are invisible) - technically correct data, but useless as a figure. Replaced with a clear table-style visualization showing file/size/subsets-challenged/PASS status instead.
+
+\- Generated 4 clean figures from the manual validation log: recall by file, efficiency by file, recall-efficiency tradeoff scatter (color=rate, shape=file), and the fixed false-positive table.
+
+\- All figures confirmed correct: wallpaper.jpg (smallest file, only 20 subsets) visibly diverges from the other 3 at high modification rates due to saturation - consistent with earlier finding, now visualized clearly.
+
