@@ -15,9 +15,14 @@ signature/keys/
 # Large / generated data
 results/raw/*.csv
 results/raw/*.json
+results/processed/*.csv
+results/processed/*.json
 ai_agent/model_store/*.pkl
 datasets/sample_files/*
 !datasets/sample_files/.gitkeep
+
+# Generated cloud storage files
+storage/cloud/*.json
 
 # OS / editor
 .DS_Store
@@ -26,6 +31,3 @@ datasets/sample_files/*
 
 # Logs
 *.log
-
-# Generated cloud storage files
-storage/cloud/*.json
