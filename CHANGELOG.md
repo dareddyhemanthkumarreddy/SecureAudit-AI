@@ -122,3 +122,9 @@
 
 \- Broken false-positive bar chart (zero-height bars invisible) - replaced with table visualization
 
+
+
+\### Added
+
+\- Basic unit test suite (16 tests): partitioning correctness, signature verification (pass/fail cases), metadata tracking, tracked-vs-untracked tampering distinction
+

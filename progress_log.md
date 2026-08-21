@@ -306,3 +306,23 @@
 
 \- All figures confirmed correct: wallpaper.jpg (smallest file, only 20 subsets) visibly diverges from the other 3 at high modification rates due to saturation - consistent with earlier finding, now visualized clearly.
 
+
+
+\### Basic unit tests added
+
+\- Installed pytest, added to requirements.txt.
+
+\- Built 3 test files covering core correctness:
+
+&#x20; - test\_partition.py: file-not-found handling, correct block/sub-block structure, byte-perfect reassembly, invalid size validation (5 tests)
+
+&#x20; - test\_signature.py: uses isolated test keypair (never touches production keys), confirms untampered data passes, tampered data fails, single-byte changes detected (4 tests)
+
+&#x20; - test\_metadata\_and\_simulators.py: metadata defaults, stability index behavior, tracked modification updates, and CRITICALLY - asserts untracked corruption leaves metadata completely unchanged (protects the project's central Phase 5 finding from ever being silently broken by future code changes) (7 tests)
+
+\- Caught and fixed one bug during test-writing: an arithmetic error in my own test fixture (not the actual code) - 256\*40 != 10000. Fixed by generating exact byte count directly.
+
+\- All 16 tests passing.
+
+
+
